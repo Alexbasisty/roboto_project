@@ -1,23 +1,25 @@
 const box = document.querySelector('.typing')
 const text = [
-    "Cześć! Jak tam?!!!", 
-    "Wow! Cieszę się, że jestesz. Lubię mówić do ludzi!",
-    "Jak masz na imię? Może śtanisław? Był tu taki Stanisław kiedyś, spędziliśmy razem piękne wspólne chwile.",
-    "Niestety żona kazała mu odejść od monitora o wrzucić węgiele do pieca. Mam nadzieję, że Ty nie masz pieca!",
+    "Cześć!^ Jak tam?!!!", 
+    "Wow!^ Cieszę się, że jestesz. ^Lubię mówić do ludzi!",
+    "Jak masz na imię? ^Może Stanisław? ^Był tu taki Stanisław kiedyś, spędziliśmy razem piękne wspólne chwile.",
+    "Niestety żona kazała mu odejść od monitora i wrzucić węgiele do pieca. ^Mam nadzieję, że Ty nie masz pieca!",
 ];
 let wordIndex = 0;
 let textIndex = 0;
 let oldTime = 0;
-let speed = 100; // czym większa wartość tym wolniejszy typing
+const speed = 80; // czym większa wartość tym wolniejszy typing
+let activeDOMElement = box;
 
 const typing = (newTime) => {
     if(newTime - oldTime > speed) {
+        const letter = text[textIndex].substr(wordIndex, 1);
 
         if(wordIndex === text[textIndex].length - 1) {
             if(textIndex === text.length - 1) {
                 return;
             }
-            
+
             return setTimeout(() => {
                 box.textContent = "";
                 textIndex ++;
@@ -26,11 +28,17 @@ const typing = (newTime) => {
                 requestAnimationFrame(typing)
 
              }, 2000)
+        } else if(wordIndex === 0 || letter === "^") {
+            const p = document.createElement('p');
+            box.appendChild(p);
+            activeDOMElement = p;
+        }
+
+        if(!(letter === "^")) {
+            activeDOMElement.textContent += letter;
         }
 
         oldTime = newTime;
-        const letter = text[textIndex].substr(wordIndex, 1);
-        box.textContent += letter;
         wordIndex++;
     }
 
