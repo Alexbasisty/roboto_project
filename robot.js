@@ -29,10 +29,19 @@ const blink = () => {
     return tl;
 }
 
-const move = () => {
+const move = (elements) => {
     const tl = new TimelineMax();
+    tl.to(elements, .5, {
+        y: -60,
+        ease: "none",
+        stagger: { each: 0.5, repeat: -1, yoyo: true }
+    })
+
     return tl;
 }
 
 const master = new TimelineMax();
-master.add(bars())
+master.add('start')
+master.add(bars(), 'start')
+master.add(move(document.querySelectorAll('#leg-right, #leg-left')), 'start')
+master.add(blink(), 'start')
